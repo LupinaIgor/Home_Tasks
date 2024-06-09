@@ -1,0 +1,483 @@
+<!--1. Запросить у пользователя его возраст и определить, кем он-->
+<!--является: ребенком (0–2), подростком (12–18), взрослым-->
+<!--(18_60) или пенсионером (60– ...).-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Check Your Age</title>
+</head>
+<body>
+<label for="ageInput">Введите ваш возраст:</label>
+<input type="number" id="ageInput">
+<button onclick="checkAge()">Check</button>
+<div id="result"></div>
+
+<script>
+    function checkAge() {
+        let age = parseInt(document.getElementById("ageInput").value);
+
+        if (!isNaN(age)) {
+            let result = "";
+
+            if (age >= 0 && age <= 12) {
+                result = "Вы ребенок";
+            } else if (age > 12 && age <= 18) {
+                result = "Вы подросток";
+            } else if (age > 18 && age < 60) {
+                result = "Вы взрослый";
+            } else if (age >= 60) {
+                result = "Вы пенсионер";
+            } else {
+                result = "Некорректный возраст";
+            }
+
+            document.getElementById("result").innerText = result;
+        } else {
+            alert("Пожалуйста, введите корректный возраст");
+        }
+    }
+
+</script>
+</body>
+</html>
+
+<!--2. Запросить у пользователя число от 0 до 9 и вывести ему-->
+<!--спецсимвол, который расположен на этой клавише (1–!,-->
+<!--2–@, 3–# и т. д).-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Вывод спецсимвола</title>
+</head>
+<body>
+<label for="numberInput">Введите число от 0 до 9:</label>
+<input type="number" id="numberInput" min="0" max="9">
+<button onclick="showSymbol()">Показать спецсимвол</button>
+<div id="symbolResult"></div>
+
+<script>
+    function showSymbol() {
+        let number = parseInt(document.getElementById("numberInput").value);
+        let symbolResult = document.getElementById("symbolResult");
+
+        switch (number) {
+            case 0:
+                symbolResult.innerText = ")";
+                break;
+            case 1:
+                symbolResult.innerText = "!";
+                break;
+            case 2:
+                symbolResult.innerText = "@";
+                break;
+            case 3:
+                symbolResult.innerText = "#";
+                break;
+            case 4:
+                symbolResult.innerText = "$";
+                break;
+            case 5:
+                symbolResult.innerText = "%";
+                break;
+            case 6:
+                symbolResult.innerText = "^";
+                break;
+            case 7:
+                symbolResult.innerText = "&";
+                break;
+            case 8:
+                symbolResult.innerText = "*";
+                break;
+            case 9:
+                symbolResult.innerText = "(";
+                break;
+            default:
+                symbolResult.innerText = "Некорректное число";
+                break;
+        }
+    }
+</script>
+</body>
+</html>
+
+<!--3. Запросить у пользователя трехзначное и число и проверить,-->
+<!--есть ли в нем одинаковые цифры.-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Проверка одинаковых цифр</title>
+</head>
+<body>
+<label for="numberInput">Введите трехзначное число:</label>
+<input type="number" id="numberInput3">
+<button onclick="checkDigits()">Проверить</button>
+<div id="result3"></div>
+
+<script>
+    function checkDigits() {
+        let number = document.getElementById("numberInput3").value;
+        let result = document.getElementById("result3");
+
+        if (number.length === 3 && !isNaN(number)) {
+            let digit1 = number[0];
+            let digit2 = number[1];
+            let digit3 = number[2];
+
+            if (digit1 === digit2 || digit1 === digit3 || digit2 === digit3) {
+                result.innerText = "В числе есть одинаковые цифры";
+            } else {
+                result.innerText = "В числе нет одинаковых цифр";
+            }
+        } else {
+            result.innerText = "Пожалуйста, введите корректное трехзначное число";
+        }
+    }
+</script>
+</body>
+</html>
+
+
+<!--4. Запросить у пользователя год и проверить, високосный он-->
+<!--или нет. Високосный год либо кратен 400, либо кратен 4 и-->
+<!--при этом не кратен 100.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Проверка високосного года</title>
+</head>
+<body>
+<label for="yearInput">Введите год:</label>
+<input type="number" id="yearInput">
+<button onclick="checkLeapYear()">Проверить</button>
+<div id="result4"></div>
+
+<script>
+    function checkLeapYear() {
+        let year = parseInt(document.getElementById("yearInput").value);
+        let result = document.getElementById("result4");
+
+        if (!isNaN(year)) {
+            if ((year % 400 === 0) || (year % 4 === 0 && year % 100 !== 0)) {
+                result.innerText = year + " год является високосным";
+            } else {
+                result.innerText = year + " год не является високосным";
+            }
+        } else {
+            result.innerText = "Пожалуйста, введите корректный год";
+        }
+    }
+</script>
+</body>
+</html>
+
+<!--5. Запросить у пользователя пятиразрядное число и опреде￾лить, является ли оно палиндромом-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Проверка на палиндром</title>
+</head>
+<body>
+<label for="numberInput">Введите пятиразрядное число:</label>
+<input type="number" id="numberInput5" maxlength="5">
+<button onclick="checkPalindrome()">Проверить</button>
+<div id="result5"></div>
+
+<script>
+    function checkPalindrome() {
+        let number = document.getElementById("numberInput5").value;
+        let result = document.getElementById("result5");
+
+        if (number.length === 5 && !isNaN(number)) {
+            if (number[0] === number[4] && number[1] === number[3]) {
+                result.innerText = number + " является палиндромом";
+            } else {
+                result.innerText = number + " не является палиндромом";
+            }
+        } else {
+            result.innerText = "Пожалуйста, введите корректное пятиразрядное число";
+        }
+    }
+</script>
+</body>
+</html>
+
+<!--6. Написать конвертор валют. Пользователь вводит количе￾ство USD, выбирает, в какую валюту хочет перевести: EUR,-->
+<!--UAN или AZN, и получает в ответ соответствующую сумму.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Конвертор валют</title>
+</head>
+<body>
+<label for="amountInput">Введите количество USD:</label>
+<input type="number" id="amountInput">
+<label for="currencySelect">Выберите валюту:</label>
+<select id="currencySelect">
+    <option value="EUR">EUR</option>
+    <option value="UAH">UAH</option>
+    <option value="PLZ">PLZ</option>
+</select>
+<button onclick="convertCurrency()">Конвертировать</button>
+<div id="result6"></div>
+
+<script>
+    function convertCurrency() {
+        let amount = parseFloat(document.getElementById("amountInput").value);
+        let currency = document.getElementById("currencySelect").value;
+        let result = document.getElementById("result6");
+
+        if (!isNaN(amount) && amount > 0) {
+            let convertedAmount = 0;
+            let rate = 0;
+
+            switch (currency) {
+                case "EUR":
+                    rate = 0.85;
+                    convertedAmount = amount * rate;
+                    result.innerText = amount + " USD = " + convertedAmount.toFixed(2) + " EUR";
+                    break;
+                case "UAH":
+                    rate = 40.5;
+                    convertedAmount = amount * rate;
+                    result.innerText = amount + " USD = " + convertedAmount.toFixed(2) + " UAH";
+                    break;
+                case "PLZ":
+                    rate = 3.99;
+                    convertedAmount = amount * rate;
+                    result.innerText = amount + " USD = " + convertedAmount.toFixed(2) + " PLZ";
+                    break;
+                default:
+                    result.innerText = "Некорректная валюта";
+                    break;
+            }
+        } else {
+            result.innerText = "Пожалуйста, введите корректное количество USD";
+        }
+    }
+</script>
+</body>
+</html>
+
+<!--7. Запросить у пользователя сумму покупки и вывести сумму-->
+<!--к оплате со скидкой: от 200 до 300 – скидка будет 3%, от 300-->
+<!--до 500 – 5%, от 500 и выше – 7%.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Расчет скидки</title>
+</head>
+<body>
+<label for="purchaseAmount">Введите сумму покупки:</label>
+<input type="number" id="purchaseAmount">
+<button onclick="calculateDiscount()">Рассчитать скидку</button>
+<div id="result7"></div>
+
+<script>
+    function calculateDiscount() {
+        let amount = parseFloat(document.getElementById("purchaseAmount").value);
+        let result = document.getElementById("result7");
+
+        if (!isNaN(amount) && amount > 0) {
+            let discount = 0;
+
+            if (amount >= 200 && amount < 300) {
+                discount = 0.03;
+            } else if (amount >= 300 && amount < 500) {
+                discount = 0.05;
+            } else if (amount >= 500) {
+                discount = 0.07;
+            }
+
+            let discountedAmount = amount - (amount * discount);
+            result.innerText = "Сумма к оплате со скидкой: " + discountedAmount.toFixed(2) + " (скидка: " + (discount * 100) + "%)";
+        } else {
+            result.innerText = "Пожалуйста, введите корректную сумму покупки";
+        }
+    }
+</script>
+</body>
+</html>
+
+<!--8. Запросить у пользователя длину окружности и периметр-->
+<!--квадрата. Определить, может ли такая окружность поме￾ститься в указанный квадрат.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Проверка окружности и квадрата</title>
+</head>
+<body>
+<label for="circleLength">Введите длину окружности:</label>
+<input type="number" id="circleLength">
+<br>
+<label for="squarePerimeter">Введите периметр квадрата:</label>
+<input type="number" id="squarePerimeter">
+<br>
+<button onclick="checkFit()">Проверить</button>
+<div id="result8"></div>
+
+<script>
+    function checkFit() {
+        let circleLength = parseFloat(document.getElementById("circleLength").value);
+        let squarePerimeter = parseFloat(document.getElementById("squarePerimeter").value);
+        let result = document.getElementById("result8");
+
+        if (!isNaN(circleLength) && !isNaN(squarePerimeter) && circleLength > 0 && squarePerimeter > 0) {
+            let circleRadius = circleLength / (2 * Math.PI);
+            let squareSide = squarePerimeter / 4;
+
+            if (circleRadius * 2 <= squareSide) {
+                result.innerText = "Окружность может поместиться в квадрате.";
+            } else {
+                result.innerText = "Окружность не может поместиться в квадрате.";
+            }
+        } else {
+            result.innerText = "Пожалуйста, введите корректные значения для длины окружности и периметра квадрата.";
+        }
+    }
+</script>
+</body>
+</html>
+
+<!--9. Задать пользователю 3 вопроса, в каждом вопросе по 3 ва￾рианта ответа. За каждый правильный ответ начисляется 2-->
+<!--балла. После вопросов выведите пользователю количество-->
+<!--набранных баллов.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Тест с вопросами</title>
+</head>
+<body>
+<form id="quizForm">
+    <div>
+        <p>Вопрос 1: Какой сейчас год?</p>
+        <input type="radio" id="q1a1" name="question1" value="0">
+        <label for="q1a1">1990</label><br>
+        <input type="radio" id="q1a2" name="question1" value="2">
+        <label for="q1a2">2024</label><br>
+        <input type="radio" id="q1a3" name="question1" value="0">
+        <label for="q1a3">2082</label>
+    </div>
+    <div>
+        <p>Вопрос 2: Сколько дней в неделе?</p>
+        <input type="radio" id="q2a1" name="question2" value="0">
+        <label for="q2a1">6</label><br>
+        <input type="radio" id="q2a2" name="question2" value="2">
+        <label for="q2a2">7</label><br>
+        <input type="radio" id="q2a3" name="question2" value="0">
+        <label for="q2a3">8</label>
+    </div>
+    <div>
+        <p>Вопрос 3: Сколько месяцев в году?</p>
+        <input type="radio" id="q3a1" name="question3" value="2">
+        <label for="q3a1">12</label><br>
+        <input type="radio" id="q3a2" name="question3" value="0">
+        <label for="q3a2">10</label><br>
+        <input type="radio" id="q3a3" name="question3" value="0">
+        <label for="q3a3">11</label>
+    </div>
+    <button type="button" onclick="calculateScore()">Показать результат</button>
+</form>
+<div id="result9"></div>
+
+<script>
+    function calculateScore() {
+        let form = document.getElementById("quizForm");
+        let score = 0;
+
+        let question1 = form.question1.value;
+        let question2 = form.question2.value;
+        let question3 = form.question3.value;
+
+        if (question1) {
+            score += parseInt(question1);
+        }
+
+        if (question2) {
+            score += parseInt(question2);
+        }
+
+        if (question3) {
+            score += parseInt(question3);
+        }
+
+        document.getElementById("result9").innerText = "Вы набрали: " + score + " баллов.";
+    }
+</script>
+</body>
+</html>
+
+<!--10. Запросить дату (день, месяц, год) и вывести следующую-->
+<!--за ней дату. Учтите возможность перехода на следующий-->
+<!--месяц, год, а также високосный год.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Следующая дата</title>
+</head>
+<body>
+<label for="dayInput">Введите день:</label>
+<input type="number" id="dayInput" min="1" max="31">
+<br>
+<label for="monthInput">Введите месяц:</label>
+<input type="number" id="monthInput" min="1" max="12">
+<br>
+<label for="yearInput">Введите год:</label>
+<input type="number" id="yearInput10" min="1">
+<br>
+<button onclick="getNextDate()">Получить следующую дату</button>
+<div id="result10"></div>
+
+<script>
+    function getNextDate() {
+        let day = parseInt(document.getElementById("dayInput").value);
+        let month = parseInt(document.getElementById("monthInput").value);
+        let year = parseInt(document.getElementById("yearInput10").value);
+        let result = document.getElementById("result10");
+
+        if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+            let daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+            // Проверка на високосный год
+            if ((year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)) {
+                daysInMonth[1] = 29;
+            }
+
+            // Переход на следующий день
+            day++;
+
+            if (day > daysInMonth[month - 1]) {
+                day = 1;
+                month++;
+                if (month > 12) {
+                    month = 1;
+                    year++;
+                }
+            }
+
+            result.innerText = "Следующая дата: " + day + "/" + month + "/" + year;
+        } else {
+            result.innerText = "Пожалуйста, введите корректные значения для дня, месяца и года.";
+        }
+    }
+</script>
+</body>
+</html>
