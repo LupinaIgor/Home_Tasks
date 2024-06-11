@@ -1,0 +1,484 @@
+<!--1. Подсчитать сумму всех чисел в заданном пользователем-->
+<!--диапазоне.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <title>Сумма чисел в диапазоне</title>
+</head>
+<body>
+<label for="startInput">Введите начало диапазона:</label>
+<input type="number" id="startInput">
+<br>
+<label for="endInput">Введите конец диапазона:</label>
+<input type="number" id="endInput">
+<br>
+<button onclick="calculateSum()">Вычислить сумму</button>
+<div id="result"></div>
+
+<script>
+  function calculateSum() {
+    let start = parseInt(document.getElementById("startInput").value);
+    let end = parseInt(document.getElementById("endInput").value);
+    let result = document.getElementById("result");
+
+    if (!isNaN(start) && !isNaN(end) && start <= end) {
+      let sum = 0;
+      for (let i = start; i <= end; i++) {
+        sum += i;
+      }
+      result.innerText = "Сумма чисел в диапазоне от " + start + " до " + end + " равна " + sum;
+    } else {
+      result.innerText = "Пожалуйста, введите корректные значения для начала и конца диапазона.";
+    }
+  }
+</script>
+</body>
+</html>
+
+<!--2. Запросить 2 числа и найти только наибольший общий-->
+<!--делитель-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Наибольший общий делитель</title>
+</head>
+<body>
+<label for="number1">Введите первое число:</label>
+<input type="number" id="number1">
+<br>
+<label for="number2">Введите второе число:</label>
+<input type="number" id="number2">
+<br>
+<button onclick="findGCD()">Найти НОД</button>
+<div id="result2"></div>
+
+<script>
+  function findGCD() {
+    let num1 = parseInt(document.getElementById("number1").value);
+    let num2 = parseInt(document.getElementById("number2").value);
+    let result = document.getElementById("result2");
+
+    if (!isNaN(num1) && !isNaN(num2)) {
+      while (num2 !== 0) {
+        let temp = num2;
+        num2 = num1 % num2;
+        num1 = temp;
+      }
+      result.innerText = "Наибольший общий делитель: " + num1;
+    } else {
+      result.innerText = "Пожалуйста, введите корректные числа.";
+    }
+  }
+</script>
+</body>
+</html>
+
+<!--3. Запросить у пользователя число и вывести все делители-->
+<!--этого числа-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Делители числа</title>
+</head>
+<body>
+<label for="numberInput">Введите число:</label>
+<input type="number" id="numberInput" min="1">
+<br>
+<button onclick="findDivisors()">Показать делители</button>
+<div id="result3"></div>
+
+<script>
+  function findDivisors() {
+    let number = parseInt(document.getElementById("numberInput").value);
+    let result = document.getElementById("result3");
+
+    if (!isNaN(number) && number > 0) {
+      let divisors = [];
+      for (let i = 1; i <= number; i++) {
+        if (number % i === 0) {
+          divisors.push(i);
+        }
+      }
+      result.innerText = "Делители числа " + number + ": " + divisors.join(", ");
+    } else {
+      result.innerText = "Пожалуйста, введите корректное положительное число.";
+    }
+  }
+</script>
+</body>
+</html>
+
+<!--4. Определить количество цифр в введенном числе.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Количество цифр в числе</title>
+</head>
+<body>
+<label for="numberInput">Введите число:</label>
+<input type="number" id="numberInput4">
+<br>
+<button onclick="countDigits()">Показать количество цифр</button>
+<div id="result4"></div>
+
+<script>
+  function countDigits() {
+    let number = document.getElementById("numberInput4").value;
+    let result = document.getElementById("result4");
+
+    if (!isNaN(number) && number !== '') {
+      let count = 0;
+      number = Math.abs(parseInt(number));  // Берем модуль числа и приводим к целому числу
+
+      while (number > 0) {
+        number = Math.floor(number / 10);  // Уменьшаем число, отбрасывая последнюю цифру
+        count++;
+      }
+
+      result.innerText = "Количество цифр: " + count;
+    } else {
+      result.innerText = "Пожалуйста, введите корректное число.";
+    }
+  }
+</script>
+</body>
+</html>
+
+<!--5. Запросить у пользователя 10 чисел и подсчитать, сколько-->
+<!--он ввел положительных, отрицательных и нулей. При этом-->
+<!--также посчитать, сколько четных и нечетных. Вывести-->
+<!--статистику на экран. Учтите, что достаточно одной пере￾менной (не 10) для ввода чисел пользователем.-->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Статистика чисел</title>
+</head>
+<body>
+<label for="numberInput">Введите число:</label>
+<input type="number" id="numberInput5">
+<br>
+<button onclick="addNumber()">Добавить число</button>
+<div id="result5"></div>
+
+<script>
+  let count = 0;
+  let positives = 0;
+  let negatives = 0;
+  let zeros = 0;
+  let evens = 0;
+  let odds = 0;
+
+  function addNumber() {
+    const numberInput = document.getElementById("numberInput5");
+    const result = document.getElementById("result5");
+
+    let num = parseInt(numberInput.value);
+
+    if (!isNaN(num)) {
+      count++;
+
+      if (num > 0) {
+        positives++;
+      } else if (num < 0) {
+        negatives++;
+      } else {
+        zeros++;
+      }
+
+      if (num % 2 === 0) {
+        evens++;
+      } else {
+        odds++;
+      }
+
+      numberInput.value = ""; // Очистить поле ввода
+
+      if (count === 10) {
+        result.innerHTML = `
+                        Положительных чисел: ${positives} <br>
+                        Отрицательных чисел: ${negatives} <br>
+                        Нулей: ${zeros} <br>
+                        Четных чисел: ${evens} <br>
+                        Нечетных чисел: ${odds}
+                    `;
+      } else {
+        result.innerHTML = `Введено чисел: ${count}. Введите еще ${10 - count} число.`;
+      }
+    } else {
+      result.innerText = "Пожалуйста, введите корректное число.";
+    }
+  }
+</script>
+</body>
+</html>
+
+<!--6. Зациклить калькулятор. Запросить у пользователя 2 числа-->
+<!--и знак, решить пример, вывести результат и спросить, хо￾чет ли он решить еще один пример. И так до тех пор, пока-->
+<!--пользователь не откажется-->
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <title>Калькулятор</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<form id="calculatorForm">-->
+<!--  <label for="number1">Введите первое число:</label>-->
+<!--  <input type="number" id="number1" required>-->
+<!--  <br>-->
+<!--  <label for="number2">Введите второе число:</label>-->
+<!--  <input type="number" id="number2" required>-->
+<!--  <br>-->
+<!--  <label for="operator">Выберите операцию:</label>-->
+<!--  <select id="operator">-->
+<!--    <option value="+">+</option>-->
+<!--    <option value="-">-</option>-->
+<!--    <option value="*">*</option>-->
+<!--    <option value="/">/</option>-->
+<!--  </select>-->
+<!--  <br>-->
+<!--  <button type="button" onclick="calculate()">Решить</button>-->
+<!--</form>-->
+<!--<div id="result"></div>-->
+<!--<button id="continueButton" onclick="continueCalculations()">Еще один пример</button>-->
+
+<!--<script>-->
+<!--  function calculate() {-->
+<!--    const number1 = parseFloat(document.getElementById("number1").value);-->
+<!--    const number2 = parseFloat(document.getElementById("number2").value);-->
+<!--    const operator = document.getElementById("operator").value;-->
+<!--    const resultDiv = document.getElementById("result");-->
+
+<!--    let result;-->
+<!--    switch (operator) {-->
+<!--      case "+":-->
+<!--        result = number1 + number2;-->
+<!--        break;-->
+<!--      case "-":-->
+<!--        result = number1 - number2;-->
+<!--        break;-->
+<!--      case "*":-->
+<!--        result = number1 * number2;-->
+<!--        break;-->
+<!--      case "/":-->
+<!--        result = number2 !== 0 ? number1 / number2 : "Ошибка: деление на ноль";-->
+<!--        break;-->
+<!--      default:-->
+<!--        result = "Некорректная операция";-->
+<!--    }-->
+
+<!--    resultDiv.innerText = `Результат: ${result}`;-->
+<!--    document.getElementById("continueButton").style.display = "block";-->
+<!--  }-->
+
+<!--  function continueCalculations() {-->
+<!--    const form = document.getElementById("calculatorForm");-->
+<!--    const resultDiv = document.getElementById("result");-->
+
+<!--    form.reset();-->
+<!--    resultDiv.innerText = "";-->
+<!--    document.getElementById("continueButton").style.display = "none";-->
+<!--  }-->
+
+<!--  // Initialize form state-->
+<!--  document.getElementById("continueButton").style.display = "none";-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!--7. Запросить у пользователя число и на сколько цифр его-->
+<!--сдвинуть. Сдвинуть цифры числа и вывести результат (если-->
+<!--число 123456 сдвинуть на 2 цифры, то получится 345612).-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Сдвиг цифр числа</title>
+</head>
+<body>
+<label for="numberInput">Введите число:</label>
+<input type="number" id="numberInput7">
+<br>
+<label for="shiftInput">На сколько цифр сдвинуть:</label>
+<input type="number" id="shiftInput">
+<br>
+<button onclick="shiftDigits()">Сдвинуть цифры</button>
+<div id="result7"></div>
+
+<script>
+  function shiftDigits() {
+    const number = document.getElementById("numberInput7").value;
+    const shift = parseInt(document.getElementById("shiftInput").value);
+    const resultDiv = document.getElementById("result7");
+
+    if (!isNaN(number) && !isNaN(shift)) {
+      const numberStr = number.toString();
+      const length = numberStr.length;
+      const shiftAmount = shift % length;
+
+      let shiftedNumber = "";
+
+      for (let i = 0; i < length; i++) {
+        const newIndex = (i + shiftAmount) % length;
+        shiftedNumber += numberStr[newIndex];
+      }
+
+      resultDiv.innerText = `Результат сдвига: ${shiftedNumber}`;
+    } else {
+      resultDiv.innerText = "Пожалуйста, введите корректные числа.";
+    }
+  }
+</script>
+</body>
+</html>
+
+<!--8. Зациклить вывод дней недели таким образом: «День недели.-->
+<!--Хотите увидеть следующий день?» и так до тех пор, пока-->
+<!--пользователь нажимает OK-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дни недели</title>
+</head>
+<body>
+<label id="dayOfWeekLabel">Понедельник</label>
+<br>
+<button onclick="showNextDay()">Показать следующий день</button>
+
+<script>
+  const daysOfWeek = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
+  let currentDayIndex = 0;
+
+  function showNextDay() {
+    currentDayIndex = (currentDayIndex + 1) % 7;
+    document.getElementById("dayOfWeekLabel").innerText = daysOfWeek[currentDayIndex];
+  }
+</script>
+</body>
+</html>
+
+<!--9. Вывести таблицу умножения для всех чисел от 2 до 9.-->
+<!--Каждое число необходимо умножить на числа от 1 до 10.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Таблица умножения</title>
+</head>
+<body>
+<table border="1">
+  <h1>Таблица умножения</h1>
+  <thead>
+  <tr>
+    <th>&times;</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+    <th>10</th>
+  </tr>
+  </thead>
+  <tbody id="multiplicationTableBody"></tbody>
+</table>
+
+<script>
+  const tableBody = document.getElementById("multiplicationTableBody");
+
+
+  for (let i = 2; i <= 9; i++) {
+    const row = document.createElement("tr");
+    const rowHeader = document.createElement("th");
+    rowHeader.textContent = i;
+    row.appendChild(rowHeader);
+
+
+    for (let j = 1; j <= 10; j++) {
+      const cell = document.createElement("td");
+      cell.textContent = i * j;
+      row.appendChild(cell);
+    }
+
+    tableBody.appendChild(row);
+  }
+</script>
+</body>
+</html>
+
+<!--10. Игра «Угадай число». Предложить пользователю загадать-->
+<!--число от 0 до 100 и отгадать его следующим способом:-->
+<!--каждую итерацию цикла делите диапазон чисел пополам,-->
+<!--записываете результат в N и спрашиваете у пользователя-->
+<!--«Ваше число > N, < N или == N?». В зависимости от того-->
+<!--что указал пользователь, уменьшаете диапазон. Начальный-->
+<!--диапазон от 0 до 100, поделили пополам и получили 50.-->
+<!--Если пользователь указал, что его число > 50, то изменили-->
+<!--диапазон на от 51 до 100. И так до тех пор, пока пользова￾тель не выберет == N.-->
+<!--Домашнее задание №3-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Игра "Угадай число"</title>
+</head>
+<body>
+<button onclick="startGame()">Начать игру</button>
+
+<script>
+  function startGame() {
+    let min = 0;
+    let max = 100;
+
+    while (true) {
+      const guess = Math.floor((min + max) / 2);
+      const userAnswer = prompt(`Ваше число > ${guess}, < ${guess} или == ${guess}? Введите >, < или =`);
+
+      // Если пользователь нажал "Отмена" или ввел некорректный ответ, завершаем игру
+      if (userAnswer === null || !(userAnswer === ">" || userAnswer === "<" || userAnswer === "=")) {
+        alert("Игра завершена.");
+        return;
+      }
+
+      // Если число угадано, завершаем игру
+      if (userAnswer === "=") {
+        alert(`Ура! Число ${guess} угадано!`);
+        return;
+      }
+
+      // Обновляем диапазон в зависимости от ответа пользователя
+      if (userAnswer === ">") {
+        min = guess + 1;
+      } else if (userAnswer === "<") {
+        max = guess - 1;
+      }
+    }
+  }
+</script>
+</body>
+</html>
