@@ -1,0 +1,313 @@
+<!--Задача 1. Создать объект, описывающий автомобиль (производитель,-->
+<!--модель, год выпуска, средняя скорость), и следующие функции-->
+<!--для работы с этим объектом.-->
+<!--1. Функция для вывода на экран информации об автомобиле.-->
+<!--2. Функция для подсчета необходимого времени для пре￾одоления переданного расстояния со средней скоростью.-->
+<!--Учтите, что через каждые 4 часа дороги водителю необхо￾димо делать перерыв на 1 час-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Информация об автомобиле</title>
+</head>
+<body>
+<h2>Объект АВТОМОБИЛЬ</h2>
+<h3>Информация об автомобиле</h3>
+<button onclick="displayCarInfo()">Показать информацию</button>
+<div id="carInfo"></div>
+
+<h3>Рассчитать время для преодоления расстояния</h3>
+<label for="distanceInput">Введите расстояние (км):</label>
+<input type="number" id="distanceInput">
+<button onclick="calculateTravelTime()">Рассчитать время</button>
+<div id="travelTimeResult"></div>
+
+<script>
+    const car = {
+        manufacturer: "Toyota",
+        model: "Corolla",
+        year: 2020,
+        averageSpeed: 100
+    };
+
+    // Функция для вывода информации об автомобиле
+    function displayCarInfo() {
+        const carInfo = document.getElementById("carInfo");
+        carInfo.innerHTML = `
+                <p>Производитель: ${car.manufacturer}</p>
+                <p>Модель: ${car.model}</p>
+                <p>Год выпуска: ${car.year}</p>
+                <p>Средняя скорость: ${car.averageSpeed} км/ч</p>
+            `;
+    }
+
+    // Функция для подсчета времени в пути с учетом перерывов
+    function calculateTravelTime() {
+        const distanceInput = document.getElementById("distanceInput").value;
+        const distance = parseFloat(distanceInput);
+        const travelTimeResult = document.getElementById("travelTimeResult");
+
+        if (isNaN(distance) || distance <= 0) {
+            travelTimeResult.textContent = "Пожалуйста, введите расстояние.";
+            return;
+        }
+
+        const averageSpeed = car.averageSpeed;
+        let totalTime = distance / averageSpeed; // Общее время без учета перерывов
+        const restHours = Math.floor(totalTime / 4); // Количество перерывов
+
+        totalTime += restHours; // Добавляем время на перерывы
+
+        const hours = Math.floor(totalTime);
+        const minutes = Math.round((totalTime - hours) * 60);
+
+        travelTimeResult.textContent = `Время в пути: ${hours} ч ${minutes} мин с учетом перерывов.`;
+    }
+</script>
+</body>
+</html>
+====================================================================================================
+<!--Задача 2. Создать объект, хранящий в себе отдельно числитель и зна￾менатель дроби, и следующие функции для работы с этим объ￾ектом.-->
+<!--1. Функция сложения 2-х объектов-дробей.-->
+<!--2. Функция вычитания 2-х объектов-дробей.-->
+<!--3. Функция умножения 2-х объектов-дробей.-->
+<!--4. Функция деления 2-х объектов-дробей.-->
+<!--5. Функция сокращения объекта-дроби.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Операции с дробями</title>
+</head>
+<body>
+<h2>Объект ДРОБИ</h2>
+
+<div>
+    <label for="numerator1">Числитель первой дроби:</label>
+    <input type="number" id="numerator1">
+    <label for="denominator1">Знаменатель первой дроби:</label>
+    <input type="number" id="denominator1">
+</div>
+
+<div>
+    <label for="numerator2">Числитель второй дроби:</label>
+    <input type="number" id="numerator2">
+    <label for="denominator2">Знаменатель второй дроби:</label>
+    <input type="number" id="denominator2">
+</div>
+
+<button onclick="performOperation('add')">Сложение</button>
+<button onclick="performOperation('subtract')">Вычитание</button>
+<button onclick="performOperation('multiply')">Умножение</button>
+<button onclick="performOperation('divide')">Деление</button>
+
+<h4>Результат:</h4>
+<div id="result"></div>
+
+<script>
+    // Функция для создания объекта дроби
+    function createFraction(numerator, denominator) {
+        return { numerator, denominator };
+    }
+
+    // Функция для сокращения дроби
+    function simplifyFraction(fraction) {
+        const gcd = (a, b) => b ? gcd(b, a % b) : a;
+        const divisor = gcd(fraction.numerator, fraction.denominator);
+        return {
+            numerator: fraction.numerator / divisor,
+            denominator: fraction.denominator / divisor
+        };
+    }
+
+    // Функция для сложения дробей
+    function addFractions(fraction1, fraction2) {
+        const numerator = fraction1.numerator * fraction2.denominator + fraction2.numerator * fraction1.denominator;
+        const denominator = fraction1.denominator * fraction2.denominator;
+        return simplifyFraction({ numerator, denominator });
+    }
+
+    // Функция для вычитания дробей
+    function subtractFractions(fraction1, fraction2) {
+        const numerator = fraction1.numerator * fraction2.denominator - fraction2.numerator * fraction1.denominator;
+        const denominator = fraction1.denominator * fraction2.denominator;
+        return simplifyFraction({ numerator, denominator });
+    }
+
+    // Функция для умножения дробей
+    function multiplyFractions(fraction1, fraction2) {
+        const numerator = fraction1.numerator * fraction2.numerator;
+        const denominator = fraction1.denominator * fraction2.denominator;
+        return simplifyFraction({ numerator, denominator });
+    }
+
+    // Функция для деления дробей
+    function divideFractions(fraction1, fraction2) {
+        const numerator = fraction1.numerator * fraction2.denominator;
+        const denominator = fraction1.denominator * fraction2.numerator;
+        return simplifyFraction({ numerator, denominator });
+    }
+
+    // Функция для выполнения операции
+    function performOperation(operation) {
+        const numerator1 = parseInt(document.getElementById("numerator1").value);
+        const denominator1 = parseInt(document.getElementById("denominator1").value);
+        const numerator2 = parseInt(document.getElementById("numerator2").value);
+        const denominator2 = parseInt(document.getElementById("denominator2").value);
+
+        const fraction1 = createFraction(numerator1, denominator1);
+        const fraction2 = createFraction(numerator2, denominator2);
+
+        let result;
+
+        switch (operation) {
+            case 'add':
+                result = addFractions(fraction1, fraction2);
+                break;
+            case 'subtract':
+                result = subtractFractions(fraction1, fraction2);
+                break;
+            case 'multiply':
+                result = multiplyFractions(fraction1, fraction2);
+                break;
+            case 'divide':
+                result = divideFractions(fraction1, fraction2);
+                break;
+        }
+
+        document.getElementById("result").textContent = `${result.numerator} / ${result.denominator}`;
+    }
+</script>
+</body>
+</html>
+=====================================================================================================
+<!--Задача 3. Создать объект, описывающий время (часы, минуты, секун￾ды), и следующие функции для работы с этим объектом.-->
+<!--1. Функция вывода времени на экран.-->
+<!--2. Функция изменения времени на переданное количество-->
+<!--секунд.-->
+<!--3. Функция изменения времени на переданное количество-->
+<!--минут.-->
+<!--4. Функция изменения времени на переданное количество-->
+<!--часов.-->
+<!--Учтите, что в последних 3-х функциях, при изменении одной-->
+<!--части времени, может измениться и другая. Например: если ко-->
+<!--времени «20:30:45» добавить 30 секунд, то должно получиться-->
+<!--«20:31:15», а не «20:30:75».-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Объект времени</title>
+</head>
+<body>
+<h2>Объект ЧАСЫ</h2>
+
+<div>
+    <label for="hours">Часы:</label>
+    <input type="number" id="hours" value="0">
+    <label for="minutes">Минуты:</label>
+    <input type="number" id="minutes" value="0">
+    <label for="seconds">Секунды:</label>
+    <input type="number" id="seconds" value="0">
+</div>
+<button onclick="setTime()">Установить время</button>
+<br>
+<h3>Текущее время</h3>
+<label for="timeLabel">Текущее время:</label>
+<label id="timeLabel"></label>
+<h3>Изменить время</h3>
+<div>
+    <label for="changeSeconds">Изменить секунды:</label>
+    <input type="number" id="changeSeconds">
+    <button onclick="changeTimeBySeconds()">Изменить</button>
+</div>
+
+<div>
+    <label for="changeMinutes">Изменить минуты:</label>
+    <input type="number" id="changeMinutes">
+    <button onclick="changeTimeByMinutes()">Изменить</button>
+</div>
+
+<div>
+    <label for="changeHours">Изменить часы:</label>
+    <input type="number" id="changeHours">
+    <button onclick="changeTimeByHours()">Изменить</button>
+</div>
+
+<script>
+    const time = {
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+    };
+
+    function setTime() {
+        time.hours = parseInt(document.getElementById("hours").value) || 0;
+        time.minutes = parseInt(document.getElementById("minutes").value) || 0;
+        time.seconds = parseInt(document.getElementById("seconds").value) || 0;
+        displayTime();
+    }
+
+    function displayTime() {
+        document.getElementById("timeLabel").textContent = `${String(time.hours).padStart(2, '0')}:${String(time.minutes).padStart(2, '0')}:${String(time.seconds).padStart(2, '0')}`;
+    }
+
+    function changeTimeBySeconds() {
+        let secondsToAdd = parseInt(document.getElementById("changeSeconds").value);
+        if (isNaN(secondsToAdd)) return;
+
+        time.seconds += secondsToAdd;
+
+        if (time.seconds >= 60) {
+            time.minutes += Math.floor(time.seconds / 60);
+            time.seconds = time.seconds % 60;
+        } else if (time.seconds < 0) {
+            time.minutes += Math.floor(time.seconds / 60);
+            time.seconds = (60 + (time.seconds % 60)) % 60;
+        }
+
+        if (time.minutes >= 60) {
+            time.hours += Math.floor(time.minutes / 60);
+            time.minutes = time.minutes % 60;
+        } else if (time.minutes < 0) {
+            time.hours += Math.floor(time.minutes / 60);
+            time.minutes = (60 + (time.minutes % 60)) % 60;
+        }
+
+        time.hours = (time.hours % 24 + 24) % 24;
+        displayTime();
+    }
+
+    function changeTimeByMinutes() {
+        let minutesToAdd = parseInt(document.getElementById("changeMinutes").value);
+        if (isNaN(minutesToAdd)) return;
+
+        time.minutes += minutesToAdd;
+
+        if (time.minutes >= 60) {
+            time.hours += Math.floor(time.minutes / 60);
+            time.minutes = time.minutes % 60;
+        } else if (time.minutes < 0) {
+            time.hours += Math.floor(time.minutes / 60);
+            time.minutes = (60 + (time.minutes % 60)) % 60;
+        }
+
+        time.hours = (time.hours % 24 + 24) % 24;
+        displayTime();
+    }
+
+    function changeTimeByHours() {
+        let hoursToAdd = parseInt(document.getElementById("changeHours").value);
+        if (isNaN(hoursToAdd)) return;
+
+        time.hours += hoursToAdd;
+        time.hours = (time.hours % 24 + 24) % 24;
+        displayTime();
+    }
+</script>
+</body>
+</html>
