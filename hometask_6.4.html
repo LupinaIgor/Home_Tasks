@@ -1,0 +1,90 @@
+<!--4. Создать массив аудиторий академии. Объект-аудитория со￾стоит из названия, количества посадочных мест -->
+<!--(от 10 до 20) и-->
+<!--названия факультета, для которого она предназначена.-->
+<!--Написать несколько функций для работы с ним.-->
+<!--1. Вывод на экран всех аудиторий.-->
+<!--2. Вывод на экран аудиторий для указанного факультета.-->
+<!--3. Вывод на экран только тех аудиторий, которые подходят для-->
+<!--переданной группы. Объект-группа состоит из названия,-->
+<!--количества студентов и названия факультета.-->
+<!--4. Функция сортировки аудиторий по количеству мест.-->
+<!--5. Функция сортировки аудиторий по названию (по алфа￾виту).-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Аудитории Академии</title>
+</head>
+<body>
+<h1>Аудитории Академии</h1>
+<button onclick="displayAllAuditoriums()">Показать все аудитории</button>
+<br><br>
+<label for="facultyInput">Введите название факультета:</label>
+<input type="text" id="facultyInput">
+<button onclick="displayFacultyAuditoriums()">Показать аудитории факультета</button>
+<br><br>
+<label for="groupInput">Введите название группы:</label>
+<input type="text" id="groupInput">
+<label for="studentsInput">Введите количество студентов:</label>
+<input type="number" id="studentsInput">
+<label for="groupFacultyInput">Введите название факультета:</label>
+<input type="text" id="groupFacultyInput">
+<button onclick="displaySuitableAuditoriums()">Показать подходящие аудитории</button>
+<br><br>
+<button onclick="sortAuditoriumsBySeats()">Сортировать аудитории по количеству мест</button>
+<button onclick="sortAuditoriumsByName()">Сортировать аудитории по названию</button>
+<br><br>
+<div id="output"></div>
+
+<script>
+    const auditoriums = [
+        { name: "Аудитория 1", seats: 15, faculty: "Физмат" },
+        { name: "Аудитория 2", seats: 20, faculty: "Исторический" },
+        { name: "Аудитория 3", seats: 10, faculty: "Филфак" },
+        { name: "Аудитория 4", seats: 18, faculty: "Ин.яз" },
+        { name: "Аудитория 5", seats: 12, faculty: "Биофак" },
+        { name: "Аудитория 6", seats: 15, faculty: "Физмат" },
+        { name: "Аудитория 7", seats: 20, faculty: "Исторический" },
+        { name: "Аудитория 8", seats: 10, faculty: "Филфак" },
+        { name: "Аудитория 9", seats: 18, faculty: "Ин.яз" },
+        { name: "Аудитория 10", seats: 12, faculty: "Биофак" }
+    ];
+
+    function displayAllAuditoriums() {
+        const output = document.getElementById('output');
+        output.innerHTML = "<h2>Все аудитории</h2>" + auditoriums.map(aud => `${aud.name} - Мест: ${aud.seats}, Факультет: ${aud.faculty}`).join("<br>");
+    }
+
+    function displayFacultyAuditoriums() {
+        const faculty = document.getElementById('facultyInput').value;
+        const output = document.getElementById('output');
+        const filteredAuditoriums = auditoriums.filter(aud => aud.faculty === faculty);
+        output.innerHTML = `<h2>Аудитории факультета ${faculty}</h2>` + filteredAuditoriums.map(aud => `${aud.name} - Мест: ${aud.seats}, Факультет: ${aud.faculty}`).join("<br>");
+    }
+
+    function displaySuitableAuditoriums() {
+        const group = {
+            name: document.getElementById('groupInput').value,
+            students: parseInt(document.getElementById('studentsInput').value),
+            faculty: document.getElementById('groupFacultyInput').value
+        };
+        const output = document.getElementById('output');
+        const suitableAuditoriums = auditoriums.filter(aud => aud.seats >= group.students && aud.faculty === group.faculty);
+        output.innerHTML = `<h2>Подходящие аудитории для группы ${group.name}</h2>` + suitableAuditoriums.map(aud => `${aud.name} - Мест: ${aud.seats}, Факультет: ${aud.faculty}`).join("<br>");
+    }
+
+    function sortAuditoriumsBySeats() {
+        const sortedAuditoriums = [...auditoriums].sort((a, b) => a.seats - b.seats);
+        const output = document.getElementById('output');
+        output.innerHTML = "<h2>Аудитории отсортированные по количеству мест</h2>" + sortedAuditoriums.map(aud => `${aud.name} - Мест: ${aud.seats}, Факультет: ${aud.faculty}`).join("<br>");
+    }
+
+    function sortAuditoriumsByName() {
+        const sortedAuditoriums = [...auditoriums].sort((a, b) => a.name.localeCompare(b.name));
+        const output = document.getElementById('output');
+        output.innerHTML = "<h2>Аудитории отсортированные по названию</h2>" + sortedAuditoriums.map(aud => `${aud.name} - Мест: ${aud.seats}, Факультет: ${aud.faculty}`).join("<br>");
+    }
+</script>
+</body>
+</html>

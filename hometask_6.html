@@ -1,0 +1,266 @@
+<!--Задание 1-->
+<!--Создать массив «Список покупок». Каждый элемент массива-->
+<!--является объектом, который содержит название продукта, необ￾ходимое количество и куплен-->
+<!--или нет. Написать несколько функ￾ций для работы с таким массивом.-->
+<!--1. Вывод всего списка на экран таким образом, чтобы сначала-->
+<!--шли некупленные продукты, а потом – купленные.-->
+<!--2. Добавление покупки в список. Учтите, что при добавлении-->
+<!--покупки с уже существующим в списке продуктом, необ￾ходимо увеличивать количество в существующей покупке,-->
+<!--а не добавлять новую.-->
+<!--3. Покупка продукта. Функция принимает название продукта-->
+<!--и отмечает его как купленный.-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">    <
+    <title>Список покупок</title>
+</head>
+<body>
+<h2>Список покупок</h2>
+
+<div>
+    <label for="productName">Название продукта:</label>
+    <input type="text" id="productName">
+</div>
+<div>
+    <label for="productQuantity">Количество:</label>
+    <input type="number" id="productQuantity">
+</div>
+<button onclick="addProduct()">Добавить продукт</button>
+<br><br>
+<div>
+    <label for="productToBuy">Купить продукт:</label>
+    <input type="text" id="productToBuy">
+    <button onclick="buyProduct()">Купить</button>
+</div>
+<h3>Список покупок</h3>
+<ul id="shoppingList"></ul>
+
+<script>
+    const shoppingList = [
+        { name: 'Хлеб', quantity: 2, bought: false },
+        { name: 'Молоко', quantity: 1, bought: true },
+        { name: 'Cахар', quantity: 1, bought: false }
+    ];
+
+    function displayList() {
+        const listElement = document.getElementById('shoppingList');
+        listElement.innerHTML = '';
+
+        const notBoughtItems = shoppingList.filter(item => !item.bought);
+        const boughtItems = shoppingList.filter(item => item.bought);
+
+        notBoughtItems.concat(boughtItems).forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${item.name} - ${item.quantity} ${item.bought ? '(Куплено)' : '(Не куплено)'}`;
+            listElement.appendChild(listItem);
+        });
+    }
+
+    function addProduct() {
+        const productName = document.getElementById('productName').value;
+        const productQuantity = parseInt(document.getElementById('productQuantity').value);
+
+        if (!productName || isNaN(productQuantity) || productQuantity <= 0) {
+            alert('Пожалуйста, введите корректные данные');
+            return;
+        }
+
+        const existingProduct = shoppingList.find(item => item.name.toLowerCase() === productName.toLowerCase());
+
+        if (existingProduct) {
+            existingProduct.quantity += productQuantity;
+        } else {
+            shoppingList.push({ name: productName, quantity: productQuantity, bought: false });
+        }
+
+        displayList();
+    }
+
+    function buyProduct() {
+        const productToBuy = document.getElementById('productToBuy').value;
+
+        const product = shoppingList.find(item => item.name.toLowerCase() === productToBuy.toLowerCase());
+
+        if (product) {
+            product.bought = true;
+        } else {
+            alert('Продукт не найден');
+        }
+
+        displayList();
+    }
+
+    window.onload = displayList;
+</script>
+</body>
+</html>
+====================================================================================================
+<!--Задание 2-->
+<!--Создать массив, описывающий чек в магазине. Каждый эле￾мент массива состоит из названия товара, -->
+<!--количества и цены за единицу товара. Написать следующие функции.-->
+<!--1. Распечатка чека на экран.-->
+<!--2. Подсчет общей суммы покупки.2-->
+<!--Домашнее задание №2-->
+<!--3. Получение самой дорогой покупки в чеке.-->
+<!--4. Подсчет средней стоимости одного товара в чеке.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Чек в магазине</title>
+</head>
+<body>
+<h2>Чек в магазине</h2>
+
+<div>
+    <label for="itemName">Название товара:</label>
+    <input type="text" id="itemName">
+</div>
+<div>
+    <label for="itemQuantity">Количество:</label>
+    <input type="number" id="itemQuantity">
+</div>
+<div>
+    <label for="itemPrice">Цена за единицу:</label>
+    <input type="number" id="itemPrice">
+</div>
+<button onclick="addItem()">Добавить товар</button>
+<br><br>
+<h3>Чек</h3>
+<ul id="receiptList"></ul>
+<div id="totalAmount"></div>
+<div id="mostExpensiveItem"></div>
+<div id="averageItemPrice"></div>
+
+<script>
+    const receipt = [
+        { name: 'Хлеб', quantity: 2, price: 20 },
+        { name: 'Молоко', quantity: 1, price: 50 },
+        { name: 'Яблоки', quantity: 5, price: 15 }
+    ];
+
+    function displayReceipt() {
+        const receiptList = document.getElementById('receiptList');
+        receiptList.innerHTML = '';
+
+        receipt.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${item.name} - ${item.quantity} x ${item.price} = ${item.quantity * item.price}`;
+            receiptList.appendChild(listItem);
+        });
+
+        document.getElementById('totalAmount').textContent = `Общая сумма: ${calculateTotal()}`;
+        document.getElementById('mostExpensiveItem').textContent = `Самая дорогая покупка: ${getMostExpensiveItem()}`;
+        document.getElementById('averageItemPrice').textContent = `Средняя стоимость одного товара: ${calculateAveragePrice()}`;
+    }
+
+    function addItem() {
+        const itemName = document.getElementById('itemName').value;
+        const itemQuantity = parseInt(document.getElementById('itemQuantity').value);
+        const itemPrice = parseFloat(document.getElementById('itemPrice').value);
+
+        if (!itemName || isNaN(itemQuantity) || itemQuantity <= 0 || isNaN(itemPrice) || itemPrice <= 0) {
+            alert('Пожалуйста, введите корректные данные');
+            return;
+        }
+
+        receipt.push({ name: itemName, quantity: itemQuantity, price: itemPrice });
+        displayReceipt();
+    }
+
+    function calculateTotal() {
+        return receipt.reduce((total, item) => total + item.quantity * item.price, 0);
+    }
+
+    function getMostExpensiveItem() {
+        if (receipt.length === 0) return 'Нет покупок';
+        const mostExpensive = receipt.reduce((prev, current) => (prev.price * prev.quantity > current.price * current.quantity) ? prev : current);
+        return `${mostExpensive.name} - ${mostExpensive.quantity} x ${mostExpensive.price} = ${mostExpensive.quantity * mostExpensive.price}`;
+    }
+
+    function calculateAveragePrice() {
+        if (receipt.length === 0) return 0;
+        const totalQuantity = receipt.reduce((total, item) => total + item.quantity, 0);
+        const totalPrice = calculateTotal();
+        return (totalPrice / totalQuantity).toFixed(2);
+    }
+
+    window.onload = displayReceipt;
+</script>
+</body>
+</html>
+======================================================================================================
+
+<!--Задание 3-->
+<!--Создать массив css-стилей (цвет, размер шрифта, выравнива￾ние, подчеркивание и т. д.). -->
+<!--Каждый элемент массива – это объ￾ект, состоящий из двух свойств: название стиля и значение стиля.-->
+<!--Написать функцию, которая принимает массив стилей и-->
+<!--текст, и выводит этот текст с помощью document.write() в тегах-->
+<!--<p></p>, добавив в открывающий тег атрибут style со всеми сти￾лями, перечисленными в массиве.-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Применение CSS-стилей к тексту</title>
+</head>
+<body>
+<h2>Стилизация текста</h2>
+<form id="styleForm">
+    <label for="textInput">Введите текст:</label><br>
+    <textarea id="textInput" rows="4" cols="50"></textarea><br><br>
+
+    <label for="colorInput">Цвет текста:</label><br>
+    <input type="color" id="colorInput" name="color"><br><br>
+
+    <label for="fontSizeInput">Размер шрифта (px):</label><br>
+    <input type="number" id="fontSizeInput" name="font-size" min="10" max="100"><br><br>
+
+    <label for="textAlignInput">Выравнивание текста:</label><br>
+    <select id="textAlignInput" name="text-align">
+        <option value="left">Слева</option>
+        <option value="center">Центр</option>
+        <option value="right">Справа</option>
+    </select><br><br>
+
+    <label for="textDecorationInput">Подчеркивание текста:</label><br>
+    <select id="textDecorationInput" name="text-decoration">
+        <option value="none">Нет</option>
+        <option value="underline">Подчеркнутый</option>
+    </select><br><br>
+
+    <button type="button" onclick="applyStyles()">Применить стили</button>
+</form>
+<h3>Увидеть результат:</h3>
+<div id="output"></div>
+
+<script>
+    function applyStyles() {
+        const textInput = document.getElementById('textInput').value;
+        const color = document.getElementById('colorInput').value;
+        const fontSize = document.getElementById('fontSizeInput').value + 'px';
+        const textAlign = document.getElementById('textAlignInput').value;
+        const textDecoration = document.getElementById('textDecorationInput').value;
+
+        const styles = [
+            { name: 'color', value: color },
+            { name: 'font-size', value: fontSize },
+            { name: 'text-align', value: textAlign },
+            { name: 'text-decoration', value: textDecoration }
+        ];
+
+        let styleString = styles.map(style => `${style.name}: ${style.value}`).join('; ');
+
+        document.getElementById('output').innerHTML = `<p style="${styleString}">${textInput}</p>`;
+    }
+</script>
+</body>
+</html>
+========================================================================================================
+
+
