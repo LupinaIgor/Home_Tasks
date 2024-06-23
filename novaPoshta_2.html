@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nova Poshta API</title>
+</head>
+<body>
+<div>
+    <select id="npAreas">
+    </select>
+</div>
+
+<div>
+    <input type="text" id="citySearch" placeholder="Пошук міста">
+    <select id="npCities">
+    </select>
+</div>
+
+<div>
+    <input type="text" id="warehouseSearch" placeholder="Пошук відділення">
+    <select id="npWarehouses">
+    </select>
+</div>
+
+<script>
+    const aptKey = 'f901101b482ee37e73e5c816ca1a252a';
+
+    let selectArea = document.getElementById('npAreas');
+    let selectCities = document.getElementById('npCities');
+    let inputCitySearch = document.getElementById('citySearch');
+    let selectWarehouses = document.getElementById('npWarehouses');
+    let inputWarehouseSearch = document.getElementById('warehouseSearch');
+
+    let areas = [];
+    let cities = [];
+    let warehouses = [];
+
+    function buildWarehouses() {
+        selectWarehouses.innerHTML = '';
+        warehouses.forEach(warehouse => {
+            let option = document.createElement('option');
+            option.innerText = warehouse['Description'];
+            option.value = warehouse.Ref;
+            selectWarehouses.appendChild(option);
+        });
+    }
+
+    function getWarehouses() {
+        let cityRef = selectCities.value;
+        let search = inputWarehouseSearch.value;
+
+        console.log(`Fetching warehouses for cityRef: ${cityRef} with search: ${search}`);
+
+        fetch('https://api.novaposhta.ua/v2.0/json/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "apiKey": aptKey,
+                "modelName": "AddressGeneral",
+                "calledMethod": "getWarehouses",
+                "methodProperties": {
+                    "CityRef": cityRef,
+                    "FindByString": search
+                }
+            })
+        })
+            .then(res => res.json())
+            .then(jsonResponse => {
+                console.log('Response from getWarehouses:', jsonResponse);
+                if (!jsonResponse.success) {
+                    throw {message: 'Data Error'};
+                }
+                warehouses = jsonResponse.data;
+                buildWarehouses();
+            })
+            .catch(err => {
+                console.error('Error fetching warehouses:', err);
+            });
+    }
+
+    inputCitySearch.onkeyup = () => {
+        getCities();
+    };
+
+    function buildCities() {
+        selectCities.innerHTML = '';
+        cities.forEach(city => {
+            let option = document.createElement('option');
+            option.innerText = city['Description'];
+            option.value = city.Ref;
+            selectCities.appendChild(option);
+        });
+    }
+
+    function getCities() {
+        let areaRef = selectArea.value;
+        let search = inputCitySearch.value;
+
+        console.log(`Fetching cities for areaRef: ${areaRef} with search: ${search}`);
+
+        fetch('https://api.novaposhta.ua/v2.0/json/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "apiKey": aptKey,
+                "modelName": "AddressGeneral",
+                "calledMethod": "getCities",
+                "methodProperties": {
+                    "AreaRef": areaRef,
+                    "FindByString": search
+                }
+            })
+        })
+            .then(res => res.json())
+            .then(jsonResponse => {
+                console.log('Response from getCities:', jsonResponse);
+                if (!jsonResponse.success) {
+                    throw {message: 'Data Error'};
+                }
+                cities = jsonResponse.data;
+                buildCities();
+            })
+            .catch(err => {
+                console.error('Error fetching cities:', err);
+            });
+    }
+
+    selectArea.onchange = () => {
+        getCities();
+    };
+
+    selectCities.onchange = () => {
+        getWarehouses();
+    };
+
+    inputWarehouseSearch.onkeyup = () => {
+        getWarehouses();
+    };
+
+    function buildAreas() {
+        selectArea.innerHTML = '';
+        areas.forEach(area => {
+            let option = document.createElement('option');
+            option.innerText = area['Description'];
+            option.value = area.Ref;
+            option.dataset.AreasCenter = area.AreasCenter;
+            selectArea.appendChild(option);
+        });
+    }
+
+    function getAreas() {
+        console.log('Fetching areas');
+
+        fetch('https://api.novaposhta.ua/v2.0/json/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "apiKey": aptKey,
+                "modelName": "AddressGeneral",
+                "calledMethod": "getAreas",
+                "methodProperties": {}
+            })
+        })
+            .then(res => res.json())
+            .then(jsonResponse => {
+                console.log('Response from getAreas:', jsonResponse);
+                if (!jsonResponse.success) {
+                    throw {message: 'Data Error'};
+                }
+                areas = jsonResponse.data;
+                buildAreas();
+            })
+            .catch(err => {
+                console.error('Error fetching areas:', err);
+            });
+    }
+
+    getAreas();
+</script>
+
+</body>
+</html>
