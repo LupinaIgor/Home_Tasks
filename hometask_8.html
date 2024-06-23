@@ -9,14 +9,13 @@
 <body>
 
 <button id="startTasks" class="btn btn-primary">Выполнить задачу</button>
-<!-- Список для отображения задач -->
+
 <ul id="taskList" class="list-group mt-3"></ul>
 
 <script>
-    // Привязываем функцию manageTasks к событию onclick кнопки startTasks
+    
     document.getElementById('startTasks').onclick = manageTasks;
-
-    // Функция для генерации случайного числа от 0 до max
+   
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
@@ -37,17 +36,15 @@
             }, whenIDo);
         });
     }
-
-    // Функция для управления задачами
-    function manageTasks() {
-        // Массив задач с описанием и важностью
+   
+    function manageTasks() {        
         const tasks = [
             { description: 'Вынести ёлку', importance: 2 },
             { description: 'Сделать уборку в квартире', importance: 3 },
             { description: 'Приготовить обед', importance: 1 }
         ];
 
-        const taskList = document.getElementById('taskList'); // Получаем элемент списка задач
+        const taskList = document.getElementById('taskList');
         taskList.innerHTML = '';
 
         // Сортируем задачи по важности в порядке убывания
@@ -55,20 +52,18 @@
 
         // Создаем массив обещаний (Promise) для каждой задачи
         const promises = tasks.map(task => randomCompletion(task));
-
-        // Обрабатываем все обещания и отображаем результаты
+        
         Promise.allSettled(promises).then(results => {
             results.forEach(result => {
-                const li = document.createElement('li'); // Создаем новый элемент списка
-                li.className = 'list-group-item'; // Добавляем класс для стилизации
+                const li = document.createElement('li'); 
                 if (result.status === 'fulfilled') {
-                    li.textContent = result.value; // Текст для выполненной задачи
-                    li.classList.add('list-group-item-success'); // Класс для успешной задачи
+                    li.textContent = result.value; 
+                    li.classList.add('list-group-item-success'); 
                 } else {
-                    li.textContent = result.reason; // Текст для невыполненной задачи
-                    li.classList.add('list-group-item-danger'); // Класс для ошибки
+                    li.textContent = result.reason; 
+                    li.classList.add('list-group-item-danger'); 
                 }
-                taskList.appendChild(li); // Добавляем элемент в список
+                taskList.appendChild(li); 
             });
         });
     }
