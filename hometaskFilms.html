@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <!-- Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+  <h2 class="text-center my-4">Search</h2>
+
+  <form>
+    <div class="form-group row justify-content-center">
+      <label for="title" class="col-sm-2 col-form-label font-weight-bold text-right">Title:</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" id="title">
+      </div>
+    </div>
+
+    <div class="form-group row justify-content-center">
+      <label for="type" class="col-sm-2 col-form-label font-weight-bold text-right">Type:</label>
+      <div class="col-sm-4">
+        <select class="form-control" id="type">
+          <option value="movie">movie</option>
+          <option value="series">series</option>
+          <option value="episode">episode</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row justify-content-center">
+      <div class="col-sm-6 text-center">
+        <button type="button" class="btn btn-primary btn-block" onclick="search()">Search</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Элемент для отображения результатов поиска -->
+  <div id="results" class="my-4"></div>
+
+  <!-- Элементы для пагинации -->
+  <div id="pagination" class="row justify-content-center"></div>
+
+  <!-- Модальное окно для отображения подробной информации о фильме -->
+  <div class="modal fade" id="movieModal" tabindex="-1" role="dialog" aria-labelledby="movieModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="movieModalLabel">Movie Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="movieModalBody">
+          <!-- Здесь будет выводиться подробная информация о фильме -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Подключение Bootstrap JS и зависимости -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  let currentPage = 1;
+
+  function search() {
+    const title = document.getElementById('title').value;
+    const type = document.getElementById('type').value;
+    const apiKey = 'dc2c82c3';
+    const url = `http://www.omdbapi.com/?apikey=${apiKey}&s=${title}&type=${type}&page=${currentPage}`;
+
+    fetch(url)
+            .then(res => res.json())
+            .then(data => {
+              console.log(data);
+
+              // Очищаем результаты и пагинацию
+              document.getElementById('results').innerHTML = '';
+              document.getElementById('pagination').innerHTML = '';
+
+              if (data.Response === "True") {
+                // Если есть результаты, обрабатываем пагинацию
+                const movies = data.Search;
+                const totalResults = parseInt(data.totalResults);
+                const totalPages = Math.ceil(totalResults / 10); // на каждой странице по 10 элементов
+
+                // Выводим результаты текущей страницы
+                movies.forEach(movie => {
+                  const movieElement = createMovieElement(movie);
+                  document.getElementById('results').appendChild(movieElement);
+                });
+
+                // Создаем кнопки пагинации
+                for (let i = 1; i <= totalPages; i++) {
+                  const pageButton = document.createElement('button');
+                  pageButton.classList.add('btn', 'btn-secondary', 'mx-1');
+                  pageButton.textContent = i;
+                  pageButton.onclick = function() {
+                    currentPage = i;
+                    search();
+                  };
+                  document.getElementById('pagination').appendChild(pageButton);
+                }
+              } else {
+                // Если фильмы не найдены, выводим сообщение
+                document.getElementById('results').innerHTML = '<p>Movie not found!</p>';
+              }
+            })
+            .catch(err => {
+              console.error(err);
+              // В случае ошибки также выводим сообщение
+              document.getElementById('results').innerHTML = '<p>Error fetching data.</p>';
+            });
+  }
+
+  // Функция для создания элемента фильма
+  function createMovieElement(movie) {
+    const movieElement = document.createElement('div');
+    movieElement.classList.add('card', 'my-2');
+
+    // Проверяем, есть ли постер, иначе используем заглушку
+    const posterUrl = movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/150';
+
+    movieElement.innerHTML = `
+        <div class="card-body">
+            <div class="row">
+                <div class="col-auto">
+                    <img src="${posterUrl}" alt="${movie.Title}" style="max-width: 100px; height: auto;">
+                </div>
+                <div class="col">
+                    <h5 class="card-title">${movie.Title}</h5>
+                    <p class="card-text">${movie.Year}</p>
+                    <button class="btn btn-info btn-sm" onclick="showDetails('${movie.imdbID}')">Details</button>
+                    <div id="details-${movie.imdbID}" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    return movieElement;
+  }
+
+  // Функция для отображения подробной информации о фильме
+  function showDetails(imdbID) {
+    const apiKey = 'dc2c82c3';
+    const url = `http://www.omdbapi.com/?apikey=${apiKey}&i=${imdbID}`;
+
+    fetch(url)
+            .then(res => res.json())
+            .then(data => {
+              console.log(data);
+              const detailsElement = document.getElementById(`details-${imdbID}`);
+              detailsElement.innerHTML = `
+                    <p><strong>Title:</strong> ${data.Title}</p>
+                    <p><strong>Year:</strong> ${data.Year}</p>
+                    <p><strong>Plot:</strong> ${data.Plot}</p>
+                `;
+              detailsElement.style.display = 'block';
+            })
+            .catch(err => {
+              console.error(err);
+              alert('Error fetching movie details.');
+            });
+  }
+</script>
+</body>
+</html>

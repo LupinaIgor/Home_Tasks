@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4 Blocks Layout</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            height: 100%;
+            position: relative;
+        }
+
+        .block {
+            height: calc(50% - 10px); /* Subtract the height of the slider */
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        #block1 {
+            background-color: #00f7ff;
+        }
+
+        #block2 {
+            background-color: #48df71;
+        }
+
+        #block3 {
+            background-color: #efdccb;
+        }
+
+        #block4 {
+            background-color: #d1682f;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            left: calc(33% - 10px); /* Adjust position to be between blocks */
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+            border-right: 20px solid gray;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .arrow.right {
+            border-right: none;
+            border-left: 20px solid gray;
+        }
+
+        .slider {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background-color: gray;
+            cursor: ns-resize;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slider::before {
+            content: "=";
+            font-size: 20px;
+            color: white;
+        }
+
+        #left-slider {
+            top: calc(50% - 10px); /* Adjust position to be between blocks */
+        }
+
+        #right-slider {
+            top: calc(50% - 10px); /* Adjust position to be between blocks */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="column" id="left-column">
+        <div class="block" id="block1"></div>
+        <div class="slider" id="left-slider"></div>
+        <div class="block" id="block3"></div>
+    </div>
+    <div class="column" id="right-column">
+        <div class="block" id="block2"></div>
+        <div class="slider" id="right-slider"></div>
+        <div class="block" id="block4"></div>
+    </div>
+    <div class="arrow" id="arrow"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        function resizeBlocks() {
+            var windowHeight = $(window).height();
+
+            // Calculate heights based on window height
+            var blockHeight = (windowHeight - 20) / 2;
+            $('.block').css('height', blockHeight);
+
+            // Adjust widths based on column visibility
+            if ($('#left-column').is(':visible')) {
+                $('#left-column').css('width', '33.33%'); // One third of the width
+                $('#right-column').css('width', '66.67%'); // Two thirds of the width
+            } else {
+                $('#left-column').css('width', '0');
+                $('#right-column').css('width', '100%');
+            }
+        }
+
+        // Initial resize
+        resizeBlocks();
+
+        // Resize blocks on window resize
+        $(window).resize(function() {
+            resizeBlocks();
+        });
+
+        $('#arrow').click(function() {
+            if ($(this).hasClass('right')) {
+                // Expand left blocks
+                $('#left-column').show();
+                resizeBlocks(); // Adjust sizes
+                $(this).removeClass('right');
+            } else {
+                // Hide left blocks
+                $('#left-column').hide();
+                resizeBlocks(); // Adjust sizes
+                $(this).addClass('right');
+            }
+        });
+
+        var isDraggingLeft = false;
+        var isDraggingRight = false;
+        var initialY;
+        var initialTopHeight;
+
+        function startDragging(e, sliderId, blockTopId, blockBottomId, setDraggingFlag) {
+            setDraggingFlag(true);
+            initialY = e.clientY;
+            initialTopHeight = $(blockTopId).height();
+            $(document).on('mousemove', function(event) {
+                onMouseMove(event, sliderId, blockTopId, blockBottomId);
+            });
+            $(document).on('mouseup', function() {
+                onMouseUp(setDraggingFlag);
+            });
+        }
+
+        function onMouseMove(e, sliderId, blockTopId, blockBottomId) {
+            if (!isDraggingLeft && !isDraggingRight) return;
+            var deltaY = e.clientY - initialY;
+            var newTopHeight = initialTopHeight + deltaY;
+            var newBottomHeight = $(window).height() - newTopHeight - 20;
+
+            if (newTopHeight >= 100 && newBottomHeight >= 100) {
+                $(blockTopId).css('height', newTopHeight);
+                $(blockBottomId).css('height', newBottomHeight);
+                $(sliderId).css('top', newTopHeight);
+            }
+        }
+
+        function onMouseUp(setDraggingFlag) {
+            setDraggingFlag(false);
+            $(document).off('mousemove');
+            $(document).off('mouseup');
+        }
+
+        $('#left-slider').mousedown(function(e) {
+            startDragging(e, '#left-slider', '#block1', '#block3', function(flag) { isDraggingLeft = flag; });
+        });
+
+        $('#right-slider').mousedown(function(e) {
+            startDragging(e, '#right-slider', '#block2', '#block4', function(flag) { isDraggingRight = flag; });
+        });
+    });
+</script>
+</body>
+</html>

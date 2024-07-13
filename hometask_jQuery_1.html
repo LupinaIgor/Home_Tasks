@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Random String Generator</title>
+    <style>
+        body {
+            background-color: #efd2bc;
+        }
+        .bold-label {
+            font-weight: bold;
+        }
+        #stringLength {
+            width: 5ch;
+        }
+    </style>
+
+</head>
+
+<body>
+<h2>Random String Generator</h2>
+
+<div>
+    <p>String should be <input type="number" id="stringLength"> characters long</p>
+</div>
+<br>
+<div>
+    <p>Which characters are allowed to occur in the string?</p>
+</div>
+
+<form>
+    <input type="checkbox" id="numeric" name="numeric">
+    <label for="numeric"> Numeric digits (0-9)</label><br>
+
+    <input type="checkbox" id="uppercase" name="uppercase">
+    <label for="uppercase"> Uppercase letters (A-Z)</label><br>
+
+    <input type="checkbox" id="lowercase" name="lowercase">
+    <label for="lowercase"> Lowercase letters (a-z)</label><br>
+</form>
+
+<br>
+<div>
+    <button onclick="generateString()"> Generate </button>
+</div>
+<br>
+<br>
+<div>
+    <label class="bold-label" for="result">Result</label>
+    <input type="text" id="result">
+</div>
+
+
+<main>
+
+</main>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script>
+    function generateString() {
+        let length = $('#stringLength').val();
+        let characters = '';
+        let result = '';
+
+        if ($('#numeric').is(':checked')) {
+            characters += '0123456789';
+        }
+        if ($('#uppercase').is(':checked')) {
+            characters += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        }
+        if ($('#lowercase').is(':checked')) {
+            characters += 'abcdefghijklmnopqrstuvwxyz';
+        }
+
+        // if (characters.length === 0) {
+        //     alert('Please select at least one character set.');
+        //     return;
+        // }
+
+        for ( let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+
+        $('#result').val(result);
+    }
+
+    $(document).ready(function() {
+        $('#generateButton').click(function() {
+            generateString();
+        });
+    });
+
+
+</script>
+
+
+
+</body>
+</html>
